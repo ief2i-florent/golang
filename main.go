@@ -19,8 +19,12 @@ func main() {
 
 			if fssync.FolderExist(source) {
 				for _, file := range fssync.Scan(source, source) {
-					m := multithread.MakeMission(source+file, target+file)
-					multithread.AddInQueue(m)
+					multithread.AddInQueue(
+						multithread.MakeMission(
+							source+file,
+							target+file,
+						),
+					)
 				}
 
 				multithread.Run()
