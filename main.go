@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ief2i-florent/golang/internal/fssync"
+	"github.com/ief2i-florent/golang/internal/multithread"
 	"github.com/spf13/cobra"
 )
 
@@ -17,10 +18,12 @@ func main() {
 			target := args[1]
 
 			if fssync.FolderExist(source) {
-				fssync.CreateFolderIfNotExist(target)
 				for _, file := range fssync.Scan(source, source) {
-					fssync.Copy(source+file, target+file)
+					m := multithread.MakeMission(source+file, target+file)
+					multithread.AddInQueue(m)
 				}
+
+				multithread.Run()
 			} else {
 				fmt.Println("Source folder not exist")
 			}
